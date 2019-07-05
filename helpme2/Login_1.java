@@ -27,7 +27,9 @@ public class Login_1 extends JFrame implements ActionListener{
 	JButton jbtn_login = new JButton(new ImageIcon(imgPath+"login.png"));
 	JButton jbtn_join = new JButton(new ImageIcon(imgPath+"confirm.png"));
 	String nickName = null;//전역변수만이 다른 클래스에서 재사용됨.
+	
 	TalkClientVer2_1 tc2 = null;
+	SuperView sv = null;
 	
 	
 	///*** 생성자 ***///
@@ -96,6 +98,7 @@ public class Login_1 extends JFrame implements ActionListener{
 			jpf_pw.setText("");
 			//TalkClientVer2
 			tc2 = new TalkClientVer2_1(this);
+			sv = new SuperView();
 		}
 	}
 	//// **** 이벤트 처리부 ****////

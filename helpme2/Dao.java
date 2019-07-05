@@ -35,6 +35,8 @@ public class Dao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			dbMgr.freeConnection(con, pstmt, rs);
 		}
 		return tList;
 	}

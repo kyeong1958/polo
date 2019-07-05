@@ -48,6 +48,7 @@ public class SuperView extends JFrame {
 	
 	// 생성자
 	public SuperView() {
+		initDisplay();
 	}
 
 	// 화면구현
@@ -64,7 +65,7 @@ public class SuperView extends JFrame {
 		jp_center_4.setBackground(Color.red);
 		jp_center_5.setBackground(Color.orange);
 		jp_center_6.setBackground(Color.pink);
-///////////////////////////////////////////////////////
+		/////////////////그리드 레이아웃 시작////////////////////////
 		GridLayout gl = new GridLayout(5,1);
 		jp_center.setLayout(gl);
 		
@@ -82,7 +83,7 @@ public class SuperView extends JFrame {
 		}
 		this.add("Center", jsp);
 		jp_center.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		////////////////////////////////////////////////////////////
+		//////////////////Dao에서 가져온 값으로 친구목록 넣기 끝////////////////
 
 		for (int i = 0; i < img.length; i++) {
 			imgFiles[i].setIcon(new ImageIcon(imgPath + img[i]));
