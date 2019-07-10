@@ -2,6 +2,7 @@ package com.helpme3;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,7 +21,6 @@ import javax.swing.JScrollPane;
 public class MainView extends JFrame implements ActionListener {
 	//// 선언부
 	//검색창 north, 그룹레이아웃한 그리드 레이아웃 센터에 붙히시면 됩니다.
-	JPanel jp_main = new JPanel(); 
 	JLabel jl_friend = new JLabel("    친구 : ");
 	JPanel jp_first = new JPanel();
 	JPanel jp_first_south = new JPanel();
@@ -43,6 +43,7 @@ public class MainView extends JFrame implements ActionListener {
 	public void initDisplay() {
 		//이벤트 처리
 		jbtn_friend.addActionListener(this);
+		jbtn_talk.addActionListener(this);
 		//화면 붙히기
 		for (int i = 0; i < img.length; i++) {
 			imgFiles[i].setIcon(new ImageIcon(imgPath + img[i]));
@@ -66,9 +67,6 @@ public class MainView extends JFrame implements ActionListener {
 		jp_center.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		//창이 닫힐 때 자원반납하기
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jp_main.setLayout(new BorderLayout());
-		jp_main.add("Center",jsp_friend);
-		this.add("Center",jp_main);
 		this.add("North", jp_first);
 		this.setSize(500, 600);
 		this.setVisible(true);
@@ -77,7 +75,17 @@ public class MainView extends JFrame implements ActionListener {
 	//** 이벤트 처리부
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		Object obj = e.getSource();
+		if(jbtn_talk == obj) {
+			Container cont = this.getContentPane();
+			if(jp_center!=null) {
+				cont.remove(jp_center);
+			}
+			ChatView fv = new ChatView();
+			this.add("Center", fv);
+			cont.revalidate();
+			cont.repaint();
+		}
 	}
 	public static void main(String[] args) {
 		MainView mv = new MainView();
