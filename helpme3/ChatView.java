@@ -87,10 +87,10 @@ public class ChatView extends JFrame implements ActionListener{
                }
                else if(e.getKeyCode()==10) {
                 try {
-                   String msg = jtp_south.getText();
-                cl = new ChatLeft("test");
+                	 String msg = wrapLine();
+                     cl = new ChatLeft("test");
                 if(msg.length()!=0) {
-                   cl.jta_left.setText(msg);
+                   cl.jlb_leftimg.setText(msg);
                    jtp_center.insertComponent(cl);
                    sd_center.insertString(sd_center.getLength(), "\n", null);                   
                 }
@@ -163,25 +163,29 @@ public class ChatView extends JFrame implements ActionListener{
       this.setVisible(true);
       this.setTitle(nickName+"님과의 대화방");
    }
-   
+   // * 개행처리 메소드
+  public String wrapLine() {
+	  //jtp의 Text 값을 가져올 때 필요한 그래픽 객체
+      Graphics g = jtp_south.getGraphics();
+      //jtp의 글씨를 가져옴
+      String getstr = jtp_south.getText();
+      //해당 글씨의 픽셀 값을 가져옴
+      int width = g.getFontMetrics().stringWidth(getstr);
+        String msg = null;
+        if (width<150) {//일정 길이 이하일 때는 해당 텍스트의 길이 만큼 메시지 상자를 맞춰줌
+        msg = "<html><p style=\"width:"+width+"px\">"+getstr+"</p></html>";
+     }
+        else {//개행처리를 위한 코드
+           msg = "<html><p style=\"width:100px\">"+getstr+"</p></html>";
+        }
+        return msg;
+  }
    @Override
    public void actionPerformed(ActionEvent arg0) {
       Object obj = arg0.getSource();
       if(obj==jbtn_send) {
           try {
-             //jtp의 Text 값을 가져올 때 필요한 그래픽 객체
-             Graphics g = jtp_south.getGraphics();
-             //jtp의 글씨를 가져옴
-             String getstr = jtp_south.getText();
-             //해당 글씨의 픽셀 값을 가져옴
-             int width = g.getFontMetrics().stringWidth(getstr);
-               String msg = null;
-               if (width<150) {//일정 길이 이하일 때는 해당 텍스트의 길이 만큼 메시지 상자를 맞춰줌
-               msg = "<html><p style=\"width:"+width+"px\">"+getstr+"</p></html>";
-            }
-               else {//개행처리를 위한 코드
-                  msg = "<html><p style=\"width:100px\">"+getstr+"</p></html>";
-               }
+            String msg = wrapLine();
             cr = new ChatRight("test");
             cr.jlb_rightimg.setText(msg);
             jtp_center.insertComponent(cr);
