@@ -18,6 +18,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.ImageObserver;
 import java.text.AttributedCharacterIterator;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -66,9 +67,10 @@ public class ChatView extends JFrame implements ActionListener {
 	ChatRight cr = null;
 
 	String nickName = null;
-
+	Map<String, Object> map = null;
 	//// 생성자
-	public ChatView() {
+	public ChatView(Map<String, Object> map) {
+		this.map = map;
 		initDisplay();
 	}
 
@@ -90,10 +92,10 @@ public class ChatView extends JFrame implements ActionListener {
 				} else if (e.getKeyCode() == 10) {
 					try {
 						String msg = wrapLine();
-						cl = new ChatLeft("test");
 						if (msg.length() != 0) {
-							cl.jlb_leftimg.setText(msg);
-							jtp_center.insertComponent(cl);
+							cr = new ChatRight("test");
+							cr.jlb_rightimg.setText(msg);
+							jtp_center.insertComponent(cr);
 							sd_center.insertString(sd_center.getLength(), "\n", null);
 						} else {
 							return;
@@ -155,14 +157,13 @@ public class ChatView extends JFrame implements ActionListener {
 		jp_south.add("South", jp_south_second);
 
 		// 창이 닫힐 때 자원반납하기
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLayout(new BorderLayout());
 		this.add("Center", jsp_center);
 		this.add("North", jp_north);
 		this.add("South", jp_south);
 		this.setSize(366, 600);
 		this.setVisible(true);
-		this.setTitle(nickName + "님과의 대화방");
+		this.setTitle(map.get("mem_nick") + "님과의 대화방");
 	}
 
 	// * 개행처리 메소드
@@ -199,8 +200,5 @@ public class ChatView extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		ChatView cv = new ChatView();
-	}
 
 }

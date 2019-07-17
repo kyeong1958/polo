@@ -28,9 +28,9 @@ public class ChatDao {
 
 	// ** 로그인 처리
 	public String login(String memid, String mempw) {
-		String nick = null;
+		String mem_id = null;
 		try {
-			con = DBConnectionMgr_helpme.getConnection();
+			con = dbMgr.getConnection();
 			cstmt = con.prepareCall("{call proc_chatlogin(?,?,?)}");
 			cstmt.setString(1, memid);
 			cstmt.setString(2, mempw);
@@ -41,32 +41,36 @@ public class ChatDao {
 			ocstmt = (OracleCallableStatement) cstmt;
 			rs = ocstmt.getCursor(3);
 			while (rs.next()) {
-				nick = rs.getString("mem_nick");
+				mem_id = rs.getString("mem_id");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			//ocstmt close하는 메소드 생성
 		}
-		return nick;
+		return mem_id;
 	}
 
 	// ** 친구목록
-	public List<Map<String, Object>> friend() {
+	public List<Map<String, Object>> friend(String mem_id) {
 		List<Map<String, Object>> tList = new Vector<>();
 		dbMgr = DBConnectionMgr_helpme.getInstance();
 		StringBuilder sql = new StringBuilder();
-		sql.append(" SELECT mem_img, mem_nick, mem_status   ");
-		sql.append("   FROM mem                   ");
-		sql.append("   ORDER BY mem_nick ASC              ");
 		try {
 			con = dbMgr.getConnection();
-			pstmt = con.prepareStatement(sql.toString());
-			rs = pstmt.executeQuery();
+			cstmt = con.prepareCall("{call proc_friendlist(?, ?)}");
+			cstmt.setString(1, mem_id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.execute();
+			ocstmt = (OracleCallableStatement) cstmt;
+			rs = ocstmt.getCursor(2);
 			Map<String, Object> rMap = null;
 			while (rs.next()) {
 				rMap = new LinkedHashMap<>();
 				rMap.put("mem_img", rs.getString("mem_img"));// 프사
 				rMap.put("mem_nick", rs.getString("mem_nick")); // 이름
 				rMap.put("mem_status", rs.getString("mem_status"));// 상메
+				rMap.put("mem_id", rs.getString("mem_id"));//
 				tList.add(rMap);
 			}
 		} catch (Exception e) {
@@ -79,28 +83,16 @@ public class ChatDao {
 	public List<Map<String, Object>> getChatMap() {
 		List<Map<String, Object>> list = new Vector<>();
 		dbMgr = DBConnectionMgr_helpme.getInstance();
-		StringBuilder sql = new StringBuilder();
-		sql.append(" SELECT clist_img, clist_name, clog_contents, clog_time, clist_code ");
-		sql.append("   FROM chatlog natural join mem natural join chatlist  ");
-		sql.append("  WHERE clog_rno =                                      ");
-		sql.append("        (                                               ");
-		sql.append("        SELECT MAX(clog_rno)                            ");
-		sql.append("          FROM chatlog                                  ");
-		sql.append("         WHERE clist_code = ?                           ");
-		sql.append("         )                                              ");
-		sql.append("     OR clog_rno =                                      ");
-		sql.append("        (                                               ");
-		sql.append("        SELECT MAX(clog_rno)                            ");
-		sql.append("          FROM chatlog                                  ");
-		sql.append("         WHERE clist_code = ?                           ");
-		sql.append("         )                                              ");
-		sql.append("  ORDER BY clog_time  desc                              ");
 		try {
 			con = dbMgr.getConnection();
-			pstmt = con.prepareStatement(sql.toString());
-			pstmt.setString(1, "jvm0");
-			pstmt.setString(2, "jvm1");
-			rs = pstmt.executeQuery();
+			cstmt = con.prepareCall("{call proc_chatlist(?,?)}");
+			cstmt.setString(1, "jvm");
+			// out 파라미터 메소드
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			// 실행 요청 메소드 호출
+			cstmt.execute();
+			ocstmt = (OracleCallableStatement) cstmt;
+			rs = ocstmt.getCursor(2);
 			Map<String, Object> rMap = null;
 			while (rs.next()) {
 				rMap = new LinkedHashMap<>();
@@ -108,9 +100,7 @@ public class ChatDao {
 				rMap.put("clist_name", rs.getString("clist_name"));
 				rMap.put("clog_contents", rs.getString("clog_contents"));
 				rMap.put("clog_time", rs.getString("clog_time"));
-				rMap.put("clist_code", rs.getString("clist_code"));
 				list.add(rMap);
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -118,6 +108,24 @@ public class ChatDao {
 			dbMgr.freeConnection(con, pstmt, rs);
 		}
 		return list;
+	}
+	
+	//** 친구목록 더블클릭 이벤트시 갠톡 단톡 구분하여 채팅창 띄우기
+	public VOChatList getNewRoom(String mem_id, String your_id) {
+		VOChatList pVO = new VOChatList();
+		try {
+			con = dbMgr.getConnection();
+			cstmt = con.prepareCall("{call proc_newroom(?,?,?)}");
+			cstmt.setString(1, mem_id);
+			cstmt.setString(2, your_id);
+			cstmt.registerOutParameter(3, java.sql.Types.VARCHAR);
+			cstmt.execute();
+			String result = cstmt.getString(3);
+			pVO.setClist_gubun(result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pVO;
 	}
 
 }

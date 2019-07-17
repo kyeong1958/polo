@@ -27,10 +27,10 @@ public class Login extends JFrame implements ActionListener {
 	JPasswordField jpf_pw = new JPasswordField("4567");
 	JButton jbtn_login = new JButton(new ImageIcon(imgPath+"login.png"));
 	JButton jbtn_join = new JButton(new ImageIcon(imgPath+"confirm.png"));
-	String nickName = null;//전역변수만이 다른 클래스에서 재사용됨.
+	String mem_id = null;//전역변수만이 다른 클래스에서 재사용됨.
 	
 	MainView mv = null;
-	
+	Client c = null;
 	
 	///*** 생성자 ***///
 	public Login() {}
@@ -79,6 +79,7 @@ public class Login extends JFrame implements ActionListener {
 		if (mem_id==null && mem_id.length()==0) {
 			JOptionPane.showMessageDialog(this, "아이디를 입력하세요.");
 			return;
+			
 		}
 		else if (mem_pw==null && mem_pw.length()==0) {
 			JOptionPane.showMessageDialog(this, "비번을 입력하세요.");
@@ -86,19 +87,19 @@ public class Login extends JFrame implements ActionListener {
 			
 		}
 		ChatDao cDao = new ChatDao();
-		nickName = cDao.login(mem_id, mem_pw);
-		if ("실패".equals(nickName)) {//실패일 경우
+		VOMem rVO = new VOMem(); 
+		mem_id = cDao.login(mem_id, mem_pw);
+		if ("실패".equals(mem_id)) {//실패일 경우
 			JOptionPane.showMessageDialog(this, "아이디와 비번을 확인하세요.");
 			return;
 		}
 		else {//성공의 경우
-			JOptionPane.showMessageDialog(this, nickName+"님의 접속을 환영합니다.");
+			//JOptionPane.showMessageDialog(this, nickName+"님의 접속을 환영합니다.");
 			this.setVisible(false);//메모리상에는 상주하고 있음.
 			jtf_id.setText("");
 			jpf_pw.setText("");
-			mv = new MainView();
-			//TalkClientVer2
-			//tc2 = new TalkClientVer2_1(this);
+			mv = new MainView(mem_id);
+			
 		}
 	}
 	//// **** 이벤트 처리부 ****////

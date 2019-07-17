@@ -1,6 +1,5 @@
 package com.helpme3;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -8,10 +7,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -38,9 +34,11 @@ public class MainView extends JFrame implements ActionListener {
 
 	JPanel jp_center = new JPanel();
 	FriendView frl = null;
-
+	String mem_id = null;
+	
 	// *** 생성자 ***//
-	public MainView() {
+	public MainView(String mem_id) {
+		this.mem_id = mem_id;
 		initDisplay();
 		friend();
 	}
@@ -92,7 +90,7 @@ public class MainView extends JFrame implements ActionListener {
 			cont.remove(jp_view);
 			jp_view = null;
 		}
-		jp_view = new FriendView();
+		jp_view = new FriendView(mem_id);
 		this.add("Center", jp_view);
 		cont.revalidate();
 		cont.repaint();
@@ -131,8 +129,8 @@ public class MainView extends JFrame implements ActionListener {
 		}
 	}
 
-	public static void main(String[] args) {
-		MainView mv = new MainView();
-		mv.initDisplay();
-	}
+//	public static void main(String[] args) {
+//		MainView mv = new MainView();
+//		mv.initDisplay();
+//	}
 }

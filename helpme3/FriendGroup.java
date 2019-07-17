@@ -3,6 +3,7 @@ package com.helpme3;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Map;
@@ -30,38 +31,17 @@ public class FriendGroup extends JPanel {
 	JLabel jl3 = new JLabel();// 상태표시
 
 	String imgPath = "C:\\workspace_java\\dev_java\\src\\images\\";
-
-	public FriendGroup() {
-
+	
+	ChatView chatview = null;
+	
+	String mem_id = null; // 내 로그인 아이디
+	String your_id = null; //그 해당 패널에 대한 상대방아이디 -> 맵에는 mem_id
+	public FriendGroup(String mem_id) {
+		this.mem_id = mem_id;
 	}
 
 	public void initDisplay(Map<String, Object> map) {
-		jl1.addMouseListener(new MouseListener() {
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
+		jl1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (e.getSource().equals(jl1)) {
@@ -70,7 +50,20 @@ public class FriendGroup extends JPanel {
 				}
 			}
 		});
-
+		jl2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if(e.getClickCount()>1) {
+					your_id = (String) map.get("mem_id"); // your_id ?
+					ChatDao cDao = new ChatDao();
+					VOChatList rVO = cDao.getNewRoom(mem_id, your_id);
+					if("새창".equals(rVO.getClist_gubun())){
+						chatview = new ChatView(map);
+					}
+				}
+			}
+		});
 		// 이미지 자르기 경로에 VO.getimg 넣기
 		ImageIcon img = new ImageIcon(imgPath + map.get("mem_img").toString() + ".png");
 		Image originImg = img.getImage();

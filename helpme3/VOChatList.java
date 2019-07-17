@@ -5,10 +5,11 @@ public class VOChatList {
 	private String clist_yourid  = null; //상대방 코드들
 	private String clist_count   = null; //채팅방 인원수
 	private String clist_name    = null; //채팅방 이름
-	private String clist_fcolor  = null; //채팅방 폰트색
+	private String clist_gubun  = null;  //채팅방 갠톡 단톡 구분
 	private String clist_bcolor  = null; //채팅방 배경색
 	private String clist_img     = null; //채팅방 프로필 사진
 	private String mem_id        = null; //회원 아이디(방 만든사람)_FK:[MEM]
+	
 	
 	public String getClist_code() {
 		return clist_code;
@@ -34,11 +35,11 @@ public class VOChatList {
 	public void setClist_name(String clist_name) {
 		this.clist_name = clist_name;
 	}
-	public String getClist_fcolor() {
-		return clist_fcolor;
+	public String getClist_gubun() {
+		return clist_gubun;
 	}
-	public void setClist_fcolor(String clist_fcolor) {
-		this.clist_fcolor = clist_fcolor;
+	public void setClist_gubun(String clist_gubun) {
+		this.clist_gubun = clist_gubun;
 	}
 	public String getClist_bcolor() {
 		return clist_bcolor;

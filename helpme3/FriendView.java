@@ -23,65 +23,66 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
+
 /*
  * 친구목록 전체 뷰
  */
-public class FriendView extends JPanel{
-	///////////////생성부
-	///////////////////위쪽 검색창///////////////////////////
+public class FriendView extends JPanel {
+	/////////////// 생성부
+	/////////////////// 위쪽 검색창///////////////////////////
 	JPanel jp_search = new JPanel();
-	JButton jbtn_search = new JButton(){
-        @Override
-        public void setBorder(Border border) {}
-    };	
-	JTextField jtf_search = new JTextField(40){
-        @Override
-        public void setBorder(Border border) {}
-    };	
-    Shape s = null;
-    FriendGroup frl = null;
-    /////////////////////검색창 이미지 경로 파일이름 크기조절
-    String imgPath="C:\\workspace_java\\dev_java\\src\\images\\";
-    ImageIcon img = new ImageIcon(imgPath+"search.png");
-	Image originImg = img.getImage(); 
-	Image changedImg= originImg.getScaledInstance(20, 20, Image.SCALE_SMOOTH );		
-    ///////////////중간 친구 목록/////////////////////////////////
-	JPanel jp_center = new JPanel();	
-	JScrollPane jsp = new JScrollPane(jp_center){
-        @Override
-        public void setBorder(Border border) {}
-    };
-    //////////////////////////////////////////////////////    
-	public FriendView() {
-		//////////////검색창 색조절///////////////////////
-         // jp_search.setBackground(Color.GRAY);
-		  jp_search.setLayout(new FlowLayout(FlowLayout.RIGHT));	
-		  jtf_search.setBackground(new Color(220, 220, 220));
-		  jbtn_search.setIcon(new ImageIcon(changedImg));
-		  jbtn_search.setBorderPainted(false);
-		  jbtn_search.setFocusPainted(false);
-		  jbtn_search.setContentAreaFilled(false);
-		  jp_search.add(jtf_search);
-		  jp_search.add(jbtn_search);		  	  
-		/////////////groupLayout 넣기///////////////////  
-	      this.setLayout(new BorderLayout());
-		  GridLayout gr = new GridLayout();
-	      gr.setRows(10);	      
-	      jp_center.setLayout(gr);
-	      ChatDao dao = new ChatDao();
-		  List<Map<String, Object>> tList = new Vector<>();
-		  tList = dao.friend();
-		  VOMem tVO = new VOMem();
-		  for(int i = 0; i < tList.size(); i++) {
-			 frl = new FriendGroup();
-			 frl.initDisplay(tList.get(i));
-			 jp_center.add(frl);
-	
-		  };		  
-	      this.add("North",jp_search);
-	      this.add("Center",jsp);
+	JButton jbtn_search = new JButton() {
+		@Override
+		public void setBorder(Border border) {
+		}
+	};
+	JTextField jtf_search = new JTextField(40) {
+		@Override
+		public void setBorder(Border border) {
+		}
+	};
+	Shape s = null;
+	FriendGroup frl = null;
+	///////////////////// 검색창 이미지 경로 파일이름 크기조절
+	String imgPath = "C:\\workspace_java\\dev_java\\src\\images\\";
+	ImageIcon img = new ImageIcon(imgPath + "search.png");
+	Image originImg = img.getImage();
+	Image changedImg = originImg.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+	/////////////// 중간 친구 목록/////////////////////////////////
+	JPanel jp_center = new JPanel();
+	JScrollPane jsp = new JScrollPane(jp_center) {
+		@Override
+		public void setBorder(Border border) {
+		}
+	};
+
+	//////////////////////////////////////////////////////
+	public FriendView(String mem_id) {
+		////////////// 검색창 색조절///////////////////////
+		jp_search.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		jtf_search.setBackground(new Color(220, 220, 220));
+		jbtn_search.setIcon(new ImageIcon(changedImg));
+		jbtn_search.setBorderPainted(false);
+		jbtn_search.setFocusPainted(false);
+		jbtn_search.setContentAreaFilled(false);
+		jp_search.add(jtf_search);
+		jp_search.add(jbtn_search);
+		///////////// groupLayout 넣기///////////////////
+		this.setLayout(new BorderLayout());
+		GridLayout gr = new GridLayout();
+		gr.setRows(10);
+		jp_center.setLayout(gr);
+		ChatDao dao = new ChatDao();
+		List<Map<String, Object>> tList = new Vector<>();
+		tList = dao.friend(mem_id);
+		for (int i = 0; i < tList.size(); i++) {
+			frl = new FriendGroup(mem_id);
+			frl.initDisplay(tList.get(i));
+			jp_center.add(frl);
+		}
+		;
+		this.add("North", jp_search);
+		this.add("Center", jsp);
 	}
-	
-	
 
 }
